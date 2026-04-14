@@ -8,6 +8,11 @@
         "prettier": "^3.8.2"
     },
     "scripts": {
-        "start": "nodemon index"
+        "start": "npx cross-env NODE_ENV=staging nodemon index",
+        "production": "npx cross-env NODE_ENV=production nodemon index"
+    },
+    "dependencies": {
+        "cross-env": "^10.1.0",
+        "dotenv": "^17.4.2"
     }
 }
