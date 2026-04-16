@@ -69,9 +69,17 @@ handler._token.get = (requestProperties, callback) => {
     if (token) {
         lib.read('tokens', token, (readingError, tokenData) => {
             if (!readingError && tokenData) {
-                callback(200, parseJSON(tokenData));
+                const tokenObject = parseJSON(tokenData);
+                if (tokenObject.expires > Date.now()) {
+                    callback(200, tokenObject);
+                } else {
+                    handler._token.deleteExpired(token);
+                    callback(400, {
+                        error: 'Requested token is already expired. Create a new one!',
+                    });
+                }
             } else {
-                callback(500, {
+                callback(404, {
                     error: 'Requested token is invalid!',
                 });
             }
@@ -82,7 +90,86 @@ handler._token.get = (requestProperties, callback) => {
         });
     }
 };
-// handler._token.put = (requestProperties, callback) => {};
-// handler._token.delete = (requestProperties, callback) => {};
+
+handler._token.put = (requestProperties, callback) => {
+    const token = typeof requestProperties.body.token === 'string' && requestProperties.body.token.length > 0 ? requestProperties.body.token : false;
+
+    const extend = typeof requestProperties.body.extend === 'boolean' ? requestProperties.body.extend : false;
+
+    if (token && extend) {
+        lib.read('tokens', token, (readingError, tokenData) => {
+            if (!readingError && tokenData) {
+                const tokenObject = parseJSON(tokenData);
+                if (tokenObject.expires >= Date.now()) {
+                    tokenObject.expires = Date.now() + 24 * 60 * 60 * 1000;
+                    lib.update('tokens', token, tokenObject, (updateError) => {
+                        if (!updateError) {
+                            callback(200, {
+                                message: 'Token expiry was extended successfully!',
+                            });
+                        } else {
+                            callback(500, {
+                                error: 'There was an error in the server side!',
+                            });
+                        }
+                    });
+                } else {
+                    handler._token.deleteExpired(token);
+                    callback(400, {
+                        error: 'Token is already expired. Create a new one!',
+                    });
+                }
+            } else {
+                callback(404, {
+                    error: 'Requested token was invalid!',
+                });
+            }
+        });
+    } else {
+        callback(400, {
+            error: 'There is a problem with your request!',
+        });
+    }
+};
+
+handler._token.delete = (requestProperties, callback) => {
+    const token = typeof requestProperties.queryStringObject.id === 'string' && requestProperties.queryStringObject.id.length > 0 ? requestProperties.queryStringObject.id : false;
+
+    if (token) {
+        lib.read('tokens', token, (readingError, tokenData) => {
+            if (!readingError && tokenData) {
+                lib.delete('tokens', token, (deleteError) => {
+                    if (!deleteError) {
+                        callback(200, {
+                            message: 'Requested token deleted successfully!',
+                        });
+                    } else {
+                        callback(500, {
+                            error: 'There was an server side error!',
+                        });
+                    }
+                });
+            } else {
+                callback(404, {
+                    error: 'Requested token is not found!',
+                });
+            }
+        });
+    } else {
+        callback(400, {
+            error: 'There is an error in your request',
+        });
+    }
+};
+
+handler._token.deleteExpired = (token) => {
+    lib.delete('tokens', token, (deleteError) => {
+        if (!deleteError) {
+            console.log('Expired token deleted successfully!');
+        } else {
+            console.log('Expired token can not be deleted!');
+        }
+    });
+};
 
 module.exports = handler;
