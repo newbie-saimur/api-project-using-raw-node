@@ -63,7 +63,25 @@ handler._token.post = (requestProperties, callback) => {
         });
     }
 };
-// handler._token.get = (requestProperties, callback) => {};
+
+handler._token.get = (requestProperties, callback) => {
+    const token = typeof requestProperties.queryStringObject.id === 'string' ? requestProperties.queryStringObject.id : false;
+    if (token) {
+        lib.read('tokens', token, (readingError, tokenData) => {
+            if (!readingError && tokenData) {
+                callback(200, parseJSON(tokenData));
+            } else {
+                callback(500, {
+                    error: 'Requested token is invalid!',
+                });
+            }
+        });
+    } else {
+        callback(400, {
+            error: 'There was an error in your request!',
+        });
+    }
+};
 // handler._token.put = (requestProperties, callback) => {};
 // handler._token.delete = (requestProperties, callback) => {};
 
