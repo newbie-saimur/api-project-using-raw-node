@@ -63,6 +63,7 @@ handler._check.post = (requestProperties, callback) => {
                                         if (!writingError2) {
                                             callback(200, {
                                                 message: 'Check added successfully!',
+                                                checkObject,
                                             });
                                         } else {
                                             callback(500, {
@@ -83,7 +84,7 @@ handler._check.post = (requestProperties, callback) => {
                         }
                     } else {
                         callback(403, {
-                            error: 'Authorization failure!',
+                            error: 'Authentication failure!',
                         });
                     }
                 });
@@ -100,7 +101,40 @@ handler._check.post = (requestProperties, callback) => {
     }
 };
 
-// handler._check.get = (requestProperties, callback) => {};
+handler._check.get = (requestProperties, callback) => {
+    const checkId = typeof requestProperties.queryStringObject.id === 'string' && requestProperties.queryStringObject.id.length === 20 ? requestProperties.queryStringObject.id : false;
+
+    const phone = typeof requestProperties.queryStringObject.phone === 'string' && requestProperties.queryStringObject.phone.length === 11 ? requestProperties.queryStringObject.phone : false;
+
+    const token = typeof requestProperties.headersObject.token === 'string' && requestProperties.headersObject.token.length === 20 ? requestProperties.headersObject.token : false;
+
+    if (checkId) {
+        tokenHandler._token.verify(token, phone, (isValid) => {
+            if (isValid) {
+                lib.read('checks', checkId, (readingError, checkData) => {
+                    if (!readingError && checkData) {
+                        callback(200, {
+                            message: 'Check received successfully!',
+                            checkData: parseJSON(checkData),
+                        });
+                    } else {
+                        callback(400, {
+                            error: 'Check id may not valid!',
+                        });
+                    }
+                });
+            } else {
+                callback(403, {
+                    error: 'Authentication Error!',
+                });
+            }
+        });
+    } else {
+        callback(400, {
+            error: 'There is an error in your request!',
+        });
+    }
+};
 // handler._check.put = (requestProperties, callback) => {};
 // handler._check.delete = (requestProperties, callback) => {};
 
