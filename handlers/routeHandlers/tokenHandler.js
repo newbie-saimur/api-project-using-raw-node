@@ -1,6 +1,3 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable no-underscore-dangle */
-
 // Dependencies
 const lib = require('../../lib/data');
 const { parseJSON, hash, generateRandomString } = require('../../helpers/utilities');
@@ -20,8 +17,16 @@ handler.tokenHandler = (requestProperties, callback) => {
 handler._token = {};
 
 handler._token.post = (requestProperties, callback) => {
-    const phone = typeof requestProperties.body.phone === 'string' && requestProperties.body.phone.trim().length === 11 ? requestProperties.body.phone : false;
-    const password = typeof requestProperties.body.password === 'string' && requestProperties.body.password.length > 0 ? requestProperties.body.password : false;
+    const phone =
+        typeof requestProperties.body.phone === 'string' &&
+        requestProperties.body.phone.trim().length === 11
+            ? requestProperties.body.phone
+            : false;
+    const password =
+        typeof requestProperties.body.password === 'string' &&
+        requestProperties.body.password.length > 0
+            ? requestProperties.body.password
+            : false;
     if (phone && password) {
         lib.read('users', phone, (readingError, userData) => {
             if (!readingError && userData) {
@@ -65,7 +70,8 @@ handler._token.post = (requestProperties, callback) => {
 };
 
 handler._token.get = (requestProperties, callback) => {
-    const token = typeof requestProperties.queryStringObject.id === 'string'
+    const token =
+        typeof requestProperties.queryStringObject.id === 'string'
             ? requestProperties.queryStringObject.id
             : false;
     if (token) {
@@ -94,11 +100,13 @@ handler._token.get = (requestProperties, callback) => {
 };
 
 handler._token.put = (requestProperties, callback) => {
-    const token = typeof requestProperties.body.token === 'string' && requestProperties.body.token.length > 0
+    const token =
+        typeof requestProperties.body.token === 'string' && requestProperties.body.token.length > 0
             ? requestProperties.body.token
             : false;
 
-    const extend = typeof requestProperties.body.extend === 'boolean' ? requestProperties.body.extend : false;
+    const extend =
+        typeof requestProperties.body.extend === 'boolean' ? requestProperties.body.extend : false;
 
     if (token && extend) {
         lib.read('tokens', token, (readingError, tokenData) => {
@@ -137,9 +145,11 @@ handler._token.put = (requestProperties, callback) => {
 };
 
 handler._token.delete = (requestProperties, callback) => {
-    const token = typeof requestProperties.queryStringObject.id === 'string' && requestProperties.queryStringObject.id.length > 0
-        ? requestProperties.queryStringObject.id
-        : false;
+    const token =
+        typeof requestProperties.queryStringObject.id === 'string' &&
+        requestProperties.queryStringObject.id.length > 0
+            ? requestProperties.queryStringObject.id
+            : false;
 
     if (token) {
         lib.read('tokens', token, (readingError, tokenData) => {

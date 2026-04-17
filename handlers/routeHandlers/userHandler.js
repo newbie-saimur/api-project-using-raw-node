@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable no-underscore-dangle */
 // Dependencies
 const lib = require('../../lib/data');
 const { hash, parseJSON } = require('../../helpers/utilities');
@@ -19,28 +17,33 @@ handler.userHandler = (requestProperties, callback) => {
 handler._users = {};
 
 handler._users.post = (requestProperties, callback) => {
-    const firstName = typeof requestProperties.body.firstName === 'string'
-        && requestProperties.body.firstName.trim().length > 0
+    const firstName =
+        typeof requestProperties.body.firstName === 'string' &&
+        requestProperties.body.firstName.trim().length > 0
             ? requestProperties.body.firstName.trim()
             : '';
 
-    const lastName = typeof requestProperties.body.lastName === 'string'
-        && requestProperties.body.lastName.trim().length > 0
+    const lastName =
+        typeof requestProperties.body.lastName === 'string' &&
+        requestProperties.body.lastName.trim().length > 0
             ? requestProperties.body.lastName.trim()
             : '';
 
-    const phone = typeof requestProperties.body.phone === 'string'
-        && requestProperties.body.phone.trim().length === 11
+    const phone =
+        typeof requestProperties.body.phone === 'string' &&
+        requestProperties.body.phone.trim().length === 11
             ? requestProperties.body.phone.trim()
             : '';
 
-    const password = typeof requestProperties.body.password === 'string'
-        && requestProperties.body.password.length > 0
+    const password =
+        typeof requestProperties.body.password === 'string' &&
+        requestProperties.body.password.length > 0
             ? hash(requestProperties.body.password)
             : '';
 
-    const tosAgreement = typeof requestProperties.body.tosAgreement === 'boolean'
-        && requestProperties.body.tosAgreement === true
+    const tosAgreement =
+        typeof requestProperties.body.tosAgreement === 'boolean' &&
+        requestProperties.body.tosAgreement === true
             ? requestProperties.body.tosAgreement
             : false;
 
@@ -91,12 +94,17 @@ handler._users.post = (requestProperties, callback) => {
 };
 
 handler._users.get = (requestProperties, callback) => {
-    const phone = typeof requestProperties.queryStringObject.phone === 'string'
-        && requestProperties.queryStringObject.phone.trim().length === 11
+    const phone =
+        typeof requestProperties.queryStringObject.phone === 'string' &&
+        requestProperties.queryStringObject.phone.trim().length === 11
             ? requestProperties.queryStringObject.phone.trim()
             : '';
     if (phone) {
-        const token = typeof requestProperties.headersObject.token === 'string' && requestProperties.headersObject.token.length === 20 ? requestProperties.headersObject.token : false;
+        const token =
+            typeof requestProperties.headersObject.token === 'string' &&
+            requestProperties.headersObject.token.length === 20
+                ? requestProperties.headersObject.token
+                : false;
 
         tokenHandler._token.verify(token, phone, (isValid) => {
             if (isValid) {
@@ -125,28 +133,36 @@ handler._users.get = (requestProperties, callback) => {
 };
 
 handler._users.put = (requestProperties, callback) => {
-    const firstName = typeof requestProperties.body.firstName === 'string'
-        && requestProperties.body.firstName.trim().length > 0
+    const firstName =
+        typeof requestProperties.body.firstName === 'string' &&
+        requestProperties.body.firstName.trim().length > 0
             ? requestProperties.body.firstName.trim()
             : '';
 
-    const lastName = typeof requestProperties.body.lastName === 'string'
-        && requestProperties.body.lastName.trim().length > 0
+    const lastName =
+        typeof requestProperties.body.lastName === 'string' &&
+        requestProperties.body.lastName.trim().length > 0
             ? requestProperties.body.lastName.trim()
             : '';
 
-    const phone = typeof requestProperties.body.phone === 'string'
-        && requestProperties.body.phone.trim().length === 11
+    const phone =
+        typeof requestProperties.body.phone === 'string' &&
+        requestProperties.body.phone.trim().length === 11
             ? requestProperties.body.phone.trim()
             : '';
 
-    const password = typeof requestProperties.body.password === 'string'
-        && requestProperties.body.password.length > 0
+    const password =
+        typeof requestProperties.body.password === 'string' &&
+        requestProperties.body.password.length > 0
             ? hash(requestProperties.body.password)
             : '';
 
     if (phone) {
-        const token = typeof requestProperties.headersObject.token === 'string' && requestProperties.headersObject.token.length === 20 ? requestProperties.headersObject.token : false;
+        const token =
+            typeof requestProperties.headersObject.token === 'string' &&
+            requestProperties.headersObject.token.length === 20
+                ? requestProperties.headersObject.token
+                : false;
 
         tokenHandler._token.verify(token, phone, (isValid) => {
             if (isValid) {
@@ -193,12 +209,17 @@ handler._users.put = (requestProperties, callback) => {
 };
 
 handler._users.delete = (requestProperties, callback) => {
-    const phone = typeof requestProperties.queryStringObject.phone === 'string'
-        && requestProperties.queryStringObject.phone.trim().length === 11
+    const phone =
+        typeof requestProperties.queryStringObject.phone === 'string' &&
+        requestProperties.queryStringObject.phone.trim().length === 11
             ? requestProperties.queryStringObject.phone.trim()
             : '';
     if (phone) {
-        const token = typeof requestProperties.headersObject.token === 'string' && requestProperties.headersObject.token.length === 20 ? requestProperties.headersObject.token : false;
+        const token =
+            typeof requestProperties.headersObject.token === 'string' &&
+            requestProperties.headersObject.token.length === 20
+                ? requestProperties.headersObject.token
+                : false;
 
         tokenHandler._token.verify(token, phone, (isValid) => {
             if (isValid) {

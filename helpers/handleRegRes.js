@@ -1,4 +1,3 @@
-/* eslint-disable no-param-reassign */
 // Dependencies
 const url = require('url');
 const { StringDecoder } = require('string_decoder');
@@ -43,12 +42,12 @@ handler.handleReqRes = (req, res) => {
         requestProperties.body = parseJSON(realData);
 
         chosenHandler(requestProperties, (statusCode, payload) => {
-            statusCode = typeof statusCode === 'number' ? statusCode : 500;
-            payload = typeof payload === 'object' ? payload : {};
+            const code = typeof statusCode === 'number' ? statusCode : 500;
+            const payloadData = typeof payload === 'object' ? payload : {};
 
-            const payloadString = JSON.stringify(payload);
+            const payloadString = JSON.stringify(payloadData);
 
-            res.writeHead(statusCode);
+            res.writeHead(code);
             res.end(payloadString);
         });
     });
